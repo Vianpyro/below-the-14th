@@ -1,11 +1,11 @@
-# Game Design Document — *Below the 14th* (working title)
+# Game Design Document — _Below the 14th_ (working title)
 
-> *"You came looking for a way through. You're not sure that still exists."*
+> _"You came looking for a way through. You're not sure that still exists."_
 
-**Version:** 0.1 — Pre-production  
-**Genre:** Psychological puzzle / anomaly detection  
-**Platform:** PC  
-**Target playtime:** 30–45 minutes  
+**Version:** 0.2 — Pre-production
+**Genre:** Psychological puzzle / anomaly detection
+**Platform:** PC
+**Target playtime:** 30–45 minutes
 **Engine:** Bevy (Rust)
 
 ---
@@ -31,11 +31,11 @@
 
 ## 1. Vision
 
-*Below the 14th* is a short, tightly designed anomaly-detection game about being lost underground and slowly realizing the rules of the place you're trapped in don't apply anymore.
+_Below the 14th_ is a short, tightly designed anomaly-detection game about being lost underground and slowly realizing the rules of the place you're trapped in don't apply anymore.
 
 The player isn't a hero. They're just someone who went somewhere they shouldn't have, and now needs to pay very close attention to get out.
 
-The game draws direct inspiration from *Exit 8* and *False Mall* — the elegance of movement-as-decision, and the mounting unease of a space that looks familiar but isn't quite right. It transposes that formula into a side-scrolling, torch-lit catacomb, adding a layer of perceptual tension that comes from only ever seeing a small circle of light at a time.
+The game draws direct inspiration from _Exit 8_ and _False Mall_ — the elegance of movement-as-decision, and the mounting unease of a space that looks familiar but isn't quite right. It transposes that formula into a side-scrolling, torch-lit catacomb, adding a layer of perceptual tension that comes from only ever seeing a small circle of light at a time.
 
 The goal is simple to describe and hard to master: **walk through the corridor, decide whether something is wrong, and act on that decision.** Everything else is texture on top of that.
 
@@ -59,7 +59,7 @@ The player is trapped in a looping catacomb corridor. The only way forward is to
 
 The central tension lives in the decision point: **keep walking, or turn back?**
 
-Walking forward means "everything is normal here."  
+Walking forward means "everything is normal here."
 Turning back means "something is wrong."
 
 Both can be right. Both can be wrong. And the cost of being wrong compounds over time.
@@ -78,22 +78,22 @@ The player only ever sees what their torch illuminates. The rest is dark.
 
 ## 5. The Character
 
-An urban explorer — a *cataphile* — who entered the restricted zones alone and has clearly been down here longer than intended. They have no special skills. They're not brave in any cinematic sense. They're just someone who knows how to pay attention and is trying very hard not to panic.
+An urban explorer — a _cataphile_ — who entered the restricted zones alone and has clearly been down here longer than intended. They have no special skills. They're not brave in any cinematic sense. They're just someone who knows how to pay attention and is trying very hard not to panic.
 
 The character is never described in dialogue (there is no dialogue). Their presence is implied through their equipment — a backpack visible on the floor somewhere in the corridor, the tools of their trade — and through the fact that they keep moving forward.
 
-The player never sees them directly. They *are* them.
+The player never sees them directly. They _are_ them.
 
 ---
 
 ## 6. Core Game Loop
 
 ```
-Enter the corridor
+Enter the corridor (from the lobby)
         │
         ▼
 FIRST HALF — "The Read"
-Walk through, memorize the space.
+Walk forward, memorize the space.
 No anomalies can occur here.
         │
         ▼
@@ -124,6 +124,8 @@ present?   present?
 
 **Consecutive, not cumulative.** Progress can't be banked. Four correct calls in a row, or nothing. This is what creates the tension of being at 20m — one wrong read and you're back at 80.
 
+**Direction is not fixed.** Each pass, the corridor extends in a direction determined by the game — sometimes the same as the last pass, sometimes reversed. The player cannot build a spatial habit around left or right. Only forward and backward carry meaning.
+
 ---
 
 ## 7. Mechanics in Detail
@@ -132,11 +134,13 @@ present?   present?
 
 The torch follows the mouse cursor. It illuminates a circular area around the point the player aims at. The rest of the corridor is dark.
 
-The battery is unlimited. Frustration from fumbling in the dark is not interesting — tension from *choosing where to look* is. The torch is a tool of focus, not a resource to manage.
+The battery is unlimited. Frustration from fumbling in the dark is not interesting — tension from _choosing where to look_ is. The torch is a tool of focus, not a resource to manage.
 
 ### Movement
 
-Standard 2D side-scrolling. The player moves left (back) or right (forward). The corridor is approximately 15–20 seconds long at a comfortable walk.
+Standard 2D side-scrolling. The corridor is approximately 15–20 seconds long at a comfortable walk. The player begins each pass in a small lobby area and walks into the corridor — but crucially, **the direction of travel alternates or randomises between passes**. Sometimes the corridor extends to the right. Sometimes to the left. Left and right are never semantically meaningful; only **forward** and **backward** are.
+
+This prevents the player from developing a spatial habit ("left always means I spotted something") and keeps every pass a genuine perceptual challenge.
 
 There is no run. Rushing doesn't help. The game is explicitly paced to reward slowness.
 
@@ -144,10 +148,16 @@ There is no run. Rushing doesn't help. The game is explicitly paced to reward sl
 
 There is no "report anomaly" button. The decision is entirely physical:
 
-- Walk forward past the midpoint and keep going → "Nothing is wrong here."
-- Turn around and walk back to the entrance → "Something is wrong here."
+- **Keep walking forward** past the midpoint and all the way to the far end → "Nothing is wrong here."
+- **Turn around and walk back** past the lobby entrance → "Something is wrong here."
 
-This is the *Exit 8* model transposed into a side-scroller. The elegance is that the mechanic requires no UI and no explanation.
+This is the _Exit 8_ model transposed into a side-scroller. The elegance is that the mechanic requires no UI and no explanation.
+
+### The Return Walk
+
+When the player turns back, the corridor does not reset immediately. The anomaly — or the clean state — remains visible for the entire return journey to the lobby. This is intentional and critical: the player can observe the anomaly again on the way out, confirm what they saw, and learn to recognise it for future passes. The return walk is part of the learning loop, not dead time.
+
+The corridor only resets and a new pass begins once the player has crossed back through the lobby entrance threshold.
 
 ### Failure State
 
@@ -163,65 +173,67 @@ This is the canonical "normal" state of the corridor. Every anomaly is a deviati
 
 ### Geometry
 
-A slightly curved corridor, curving gently to the right. The far end is never fully visible. Ceiling is low — oppressive but not crawlspace low. Floor is uneven stone, slightly damp.
+A slightly curved corridor, curving gently toward the far end. The far end is never fully visible. Ceiling is low — oppressive but not crawlspace low. Floor is uneven stone, slightly damp.
+
+Because travel direction alternates between passes, all wall references in this document use **near** (the wall closer to the lobby entrance) and **far** (the wall toward the exit) rather than left and right. The world geometry is symmetric — the corridor looks identical regardless of which direction it extends from the lobby.
 
 The corridor has three depth layers for parallax:
 
-| Layer | Content | Torch Illumination |
-|---|---|---|
-| Background | Rough limestone, cracks, moisture stains | Barely reaches here |
-| Midground | Ossuaire walls, brick sections — main anomaly zone | Primary illumination |
-| Foreground | Stone frame edges, partial ceiling | Always partially lit |
+| Layer      | Content                                            | Torch Illumination   |
+| ---------- | -------------------------------------------------- | -------------------- |
+| Background | Rough limestone, cracks, moisture stains           | Barely reaches here  |
+| Midground  | Ossuaire walls, brick sections — main anomaly zone | Primary illumination |
+| Foreground | Stone frame edges, partial ceiling                 | Always partially lit |
 
 ### Zone A — First Third (The Read)
 
-| Position | Element | Canonical State |
-|---|---|---|
-| Floor | Puddles of standing water | Irregular, reflect torchlight |
-| Left wall | Red painted arrow | Points right (toward exit) |
-| Right wall | Date carved into stone | **"1786"** |
-| Ceiling | Rusted metal hook | Empty |
+| Position  | Element                   | Canonical State               |
+| --------- | ------------------------- | ----------------------------- |
+| Floor     | Puddles of standing water | Irregular, reflect torchlight |
+| Near wall | Red painted arrow         | Points toward exit (forward)  |
+| Far wall  | Date carved into stone    | **"1786"**                    |
+| Ceiling   | Rusted metal hook         | Empty                         |
 
 ### Zone B — Midpoint Marker
 
-| Position | Element | Canonical State |
-|---|---|---|
-| Floor | Broken work lamp | Lying on its side, glass smashed |
-| Left wall | Abandoned explorer's backpack | Zip open, left side only |
-| Right wall | Row of skulls | **Exactly 7**, third one slightly forward |
-| Ceiling | Electrical cable | Hanging loose, frayed end visible |
+| Position  | Element                       | Canonical State                           |
+| --------- | ----------------------------- | ----------------------------------------- |
+| Floor     | Broken work lamp              | Lying on its side, glass smashed          |
+| Near wall | Abandoned explorer's backpack | Zip open, near side only                  |
+| Far wall  | Row of skulls                 | **Exactly 7**, third one slightly forward |
+| Ceiling   | Electrical cable              | Hanging loose, frayed end visible         |
 
 ### Zone C — Second Half (The Decision)
 
-| Position | Element | Canonical State |
-|---|---|---|
-| Floor | Braided rope | Coiled neatly |
-| Left wall | Candle in wall crack | **Unlit** |
-| Right wall | Latin inscription | **"MEMENTO MORI"**, fully legible |
-| Ceiling | Work site fluorescent lamp | **On**, slight flicker |
+| Position  | Element                    | Canonical State                   |
+| --------- | -------------------------- | --------------------------------- |
+| Floor     | Braided rope               | Coiled neatly                     |
+| Near wall | Candle in wall crack       | **Unlit**                         |
+| Far wall  | Latin inscription          | **"MEMENTO MORI"**, fully legible |
+| Ceiling   | Work site fluorescent lamp | **On**, slight flicker            |
 
 ### The Six Immutable Rules
 
 These never change — until Act 3 deliberately breaks them:
 
-1. The arrow always points toward the exit
+1. The arrow always points toward the exit (forward)
 2. The candle is always unlit
 3. The fluorescent lamp is always on
 4. There are always exactly 7 skulls in Zone B
-5. The backpack is always on the left wall
+5. The backpack is always on the near wall
 6. "MEMENTO MORI" is always fully legible
 
 When an immutable rule breaks, it signals to the attentive player that something fundamental has shifted. These moments are reserved for Act 3 and used sparingly.
 
 ### Canonical Soundscape
 
-| Sound | Character |
-|---|---|
-| Water drips | Irregular, coming from the right, persistent |
-| Footsteps | Wet stone echo, slightly delayed |
-| Fluorescent hum | Low, constant, Zone C only |
-| Structure creak | Occasional, distant, every ~30 seconds |
-| Air current | One cold breath per traversal, random timing |
+| Sound           | Character                                      |
+| --------------- | ---------------------------------------------- |
+| Water drips     | Irregular, coming from the far end, persistent |
+| Footsteps       | Wet stone echo, slightly delayed               |
+| Fluorescent hum | Low, constant, Zone C only                     |
+| Structure creak | Occasional, distant, every ~30 seconds         |
+| Air current     | One cold breath per traversal, random timing   |
 
 ---
 
@@ -229,90 +241,90 @@ When an immutable rule breaks, it signals to the attentive player that something
 
 Anomalies are classified on two axes:
 
-**Subtlety:** Obvious → Subtle → Ambiguous  
+**Subtlety:** Obvious → Subtle → Ambiguous
 **Nature:** Physical (something moved) / Logical (something is impossible) / Temporal (something behaves wrongly)
 
 Actes 1–2 use Obvious and Subtle anomalies. Act 3 introduces Ambiguous and breaks the Immutable Rules. Act 4 operates at a meta level.
 
 ### Category 1 — Physical Objects
 
-| Anomaly | Subtlety | Nature | Act |
-|---|---|---|---|
-| Skull missing from its alcove | Obvious | Physical | 1 |
-| Candle lit instead of unlit | Obvious | Physical | 1 |
-| Backpack moved one meter from canonical position | Subtle | Physical | 2 |
-| Only 6 skulls in the row instead of 7 | Subtle | Physical | 2 |
-| Candle flame burning upside down | Subtle | Logical | 2 |
-| An object appears that wasn't there on the last pass | Ambiguous | Temporal | 3 |
-| A second backpack, identical to the player's own | Ambiguous | Logical | 3 |
+| Anomaly                                              | Subtlety  | Nature   | Act |
+| ---------------------------------------------------- | --------- | -------- | --- |
+| Skull missing from its alcove                        | Obvious   | Physical | 1   |
+| Candle lit instead of unlit                          | Obvious   | Physical | 1   |
+| Backpack moved one meter from canonical position     | Subtle    | Physical | 2   |
+| Only 6 skulls in the row instead of 7                | Subtle    | Physical | 2   |
+| Candle flame burning upside down                     | Subtle    | Logical  | 2   |
+| An object appears that wasn't there on the last pass | Ambiguous | Temporal | 3   |
+| A second backpack, identical to the player's own     | Ambiguous | Logical  | 3   |
 
 ### Category 2 — Architecture
 
-| Anomaly | Subtlety | Nature | Act |
-|---|---|---|---|
-| Bricked-up doorway now open | Obvious | Physical | 1 |
-| Collapsed arch now intact | Obvious | Physical | 1 |
-| Corridor appears longer than it should be | Subtle | Logical | 2 |
-| Wall crack from last pass has disappeared | Subtle | Physical | 2 |
-| Wrong wall texture in a section (stone becomes brick) | Subtle | Physical | 2 |
-| Entire corridor is a mirror image of itself | Ambiguous | Logical | 3 |
-| A chamber exists that cannot be here | Ambiguous | Logical | 3 |
+| Anomaly                                               | Subtlety  | Nature   | Act |
+| ----------------------------------------------------- | --------- | -------- | --- |
+| Bricked-up doorway now open                           | Obvious   | Physical | 1   |
+| Collapsed arch now intact                             | Obvious   | Physical | 1   |
+| Corridor appears longer than it should be             | Subtle    | Logical  | 2   |
+| Wall crack from last pass has disappeared             | Subtle    | Physical | 2   |
+| Wrong wall texture in a section (stone becomes brick) | Subtle    | Physical | 2   |
+| Entire corridor is a mirror image of itself           | Ambiguous | Logical  | 3   |
+| A chamber exists that cannot be here                  | Ambiguous | Logical  | 3   |
 
 ### Category 3 — Light and Shadow
 
-| Anomaly | Subtlety | Nature | Act |
-|---|---|---|---|
-| Shadow cast with no light source to explain it | Obvious | Logical | 1 |
-| Work lamp on when it was broken and dark before | Obvious | Physical | 1 |
-| Player's own shadow points the wrong direction | Subtle | Logical | 2 |
-| Pool of light with no visible source | Subtle | Logical | 2 |
-| Shadow of an object that isn't there | Ambiguous | Logical | 3 |
-| The torch illuminates behind the player, not ahead | Ambiguous | Temporal | 3 |
+| Anomaly                                            | Subtlety  | Nature   | Act |
+| -------------------------------------------------- | --------- | -------- | --- |
+| Shadow cast with no light source to explain it     | Obvious   | Logical  | 1   |
+| Work lamp on when it was broken and dark before    | Obvious   | Physical | 1   |
+| Player's own shadow points the wrong direction     | Subtle    | Logical  | 2   |
+| Pool of light with no visible source               | Subtle    | Logical  | 2   |
+| Shadow of an object that isn't there               | Ambiguous | Logical  | 3   |
+| The torch illuminates behind the player, not ahead | Ambiguous | Temporal | 3   |
 
 ### Category 4 — Inscriptions and Graffiti
 
-| Anomaly | Subtlety | Nature | Act |
-|---|---|---|---|
-| Carved date has changed | Obvious | Temporal | 1 |
-| Directional arrow is reversed | Obvious | Physical | 1 |
-| A carved name has subtly changed between passes | Subtle | Temporal | 2 |
-| French graffiti replaced by an unknown language | Subtle | Logical | 2 |
-| New message reads "TURN BACK" | Ambiguous | Temporal | 3 |
-| Graffiti describes exactly what the player just did | Ambiguous | Logical | 3 |
-| Distance panel displays a negative number | Ambiguous | Logical | 3 |
+| Anomaly                                             | Subtlety  | Nature   | Act |
+| --------------------------------------------------- | --------- | -------- | --- |
+| Carved date has changed                             | Obvious   | Temporal | 1   |
+| Directional arrow is reversed                       | Obvious   | Physical | 1   |
+| A carved name has subtly changed between passes     | Subtle    | Temporal | 2   |
+| French graffiti replaced by an unknown language     | Subtle    | Logical  | 2   |
+| New message reads "TURN BACK"                       | Ambiguous | Temporal | 3   |
+| Graffiti describes exactly what the player just did | Ambiguous | Logical  | 3   |
+| Distance panel displays a negative number           | Ambiguous | Logical  | 3   |
 
 ### Category 5 — Audio Only
 
 These anomalies have no visual component. The player must have internalized the canonical soundscape to detect them.
 
-| Anomaly | Subtlety | Nature | Act |
-|---|---|---|---|
-| Complete silence where dripping water should be | Obvious | Physical | 1 |
-| Footsteps behind the player that stop when they stop | Obvious | Logical | 2 |
-| Echo returns slightly too late | Subtle | Logical | 2 |
-| Indistinct distant voice where there was none | Subtle | Physical | 2 |
-| The distant voice says something recognizable | Ambiguous | Logical | 3 |
-| No sound at all — even footsteps are silent | Ambiguous | Temporal | 3 |
+| Anomaly                                              | Subtlety  | Nature   | Act |
+| ---------------------------------------------------- | --------- | -------- | --- |
+| Complete silence where dripping water should be      | Obvious   | Physical | 1   |
+| Footsteps behind the player that stop when they stop | Obvious   | Logical  | 2   |
+| Echo returns slightly too late                       | Subtle    | Logical  | 2   |
+| Indistinct distant voice where there was none        | Subtle    | Physical | 2   |
+| The distant voice says something recognizable        | Ambiguous | Logical  | 3   |
+| No sound at all — even footsteps are silent          | Ambiguous | Temporal | 3   |
 
 ### Category 6 — Presence / Silhouette
 
 Used sparingly. Maximum one per act. Always positioned in the second half of the corridor.
 
-| Anomaly | Subtlety | Nature | Act |
-|---|---|---|---|
-| Silhouette at the far end that disappears when approached | Obvious | Physical | 2 |
-| Silhouette that doesn't recede as the player advances | Subtle | Logical | 2 |
-| Silhouette that mirrors the player's movements exactly | Ambiguous | Logical | 3 |
-| Silhouette present on the return pass but not the initial walk | Ambiguous | Temporal | 3 |
-| Silhouette identical to the player, back turned | Ambiguous | Logical | 4 |
+| Anomaly                                                        | Subtlety  | Nature   | Act |
+| -------------------------------------------------------------- | --------- | -------- | --- |
+| Silhouette at the far end that disappears when approached      | Obvious   | Physical | 2   |
+| Silhouette that doesn't recede as the player advances          | Subtle    | Logical  | 2   |
+| Silhouette that mirrors the player's movements exactly         | Ambiguous | Logical  | 3   |
+| Silhouette present on the return pass but not the initial walk | Ambiguous | Temporal | 3   |
+| Silhouette identical to the player, back turned                | Ambiguous | Logical  | 4   |
 
-The final entry — the player's double — is reserved exclusively for Act 4. It is the game's thesis statement rendered as an image: *maybe you are the anomaly.*
+The final entry — the player's double — is reserved exclusively for Act 4. It is the game's thesis statement rendered as an image: _maybe you are the anomaly._
 
 ---
 
 ## 10. Act Structure & Level Sequence
 
-Total: 38 corridor passes across 4 acts. 13 of those passes are clean (no anomaly). This ~34% clean rate mirrors *Exit 8* and is intentional — it keeps the player from defaulting to "always turn back."
+Total: 38 corridor passes across 4 acts. 13 of those passes are clean (no anomaly). This ~34% clean rate mirrors _Exit 8_ and is intentional — it keeps the player from defaulting to "always turn back."
 
 ### Act 1 — "The Entrance" (~5 min, 8 passes)
 
@@ -320,18 +332,18 @@ The tutorial that doesn't announce itself. Anomalies are obvious, one per pass, 
 
 The fluorescent work lamps are still on. The corridor is relatively well-lit.
 
-| Pass | State | Anomaly |
-|---|---|---|
-| 1 | **CLEAN** | — |
-| 2 | Anomaly | **[OBJECTS]** Skull missing from Zone B |
-| 3 | **CLEAN** | — |
-| 4 | Anomaly | **[ARCHITECTURE]** Bricked doorway now open |
-| 5 | Anomaly | **[INSCRIPTIONS]** Arrow reversed |
-| 6 | **CLEAN** | — |
-| 7 | Anomaly | **[LIGHT]** Shadow with no source |
-| 8 | **CLEAN** | Transition — work lamps flicker out one by one |
+| Pass | State     | Anomaly                                        |
+| ---- | --------- | ---------------------------------------------- |
+| 1    | **CLEAN** | —                                              |
+| 2    | Anomaly   | **[OBJECTS]** Skull missing from Zone B        |
+| 3    | **CLEAN** | —                                              |
+| 4    | Anomaly   | **[ARCHITECTURE]** Bricked doorway now open    |
+| 5    | Anomaly   | **[INSCRIPTIONS]** Arrow reversed              |
+| 6    | **CLEAN** | —                                              |
+| 7    | Anomaly   | **[LIGHT]** Shadow with no source              |
+| 8    | **CLEAN** | Transition — work lamps flicker out one by one |
 
-*End of Act 1:* The player is left with only their torch.
+_End of Act 1:_ The player is left with only their torch.
 
 ---
 
@@ -339,22 +351,22 @@ The fluorescent work lamps are still on. The corridor is relatively well-lit.
 
 Anomalies become subtle. Audio anomalies are introduced. The first silhouette appears at the very end of the act, functioning as a hard punctuation mark before the corridor resets unexpectedly.
 
-| Pass | State | Anomaly |
-|---|---|---|
-| 9 | **CLEAN** | — |
-| 10 | Anomaly | **[OBJECTS]** 6 skulls instead of 7 |
-| 11 | Anomaly | **[AUDIO]** Dripping water has stopped entirely |
-| 12 | **CLEAN** | — |
-| 13 | Anomaly | **[ARCHITECTURE]** Wall crack from last pass is gone |
-| 14 | Anomaly | **[INSCRIPTIONS]** Carved name has subtly changed |
-| 15 | **CLEAN** | — |
-| 16 | Anomaly | **[LIGHT]** Player's shadow points the wrong way |
-| 17 | Anomaly | **[OBJECTS]** Candle burning upside down |
-| 18 | **CLEAN** | — |
-| 19 | Anomaly | **[AUDIO]** Footsteps behind the player |
-| 20 | Anomaly | **[PRESENCE]** Silhouette at corridor end, disappears |
+| Pass | State     | Anomaly                                               |
+| ---- | --------- | ----------------------------------------------------- |
+| 9    | **CLEAN** | —                                                     |
+| 10   | Anomaly   | **[OBJECTS]** 6 skulls instead of 7                   |
+| 11   | Anomaly   | **[AUDIO]** Dripping water has stopped entirely       |
+| 12   | **CLEAN** | —                                                     |
+| 13   | Anomaly   | **[ARCHITECTURE]** Wall crack from last pass is gone  |
+| 14   | Anomaly   | **[INSCRIPTIONS]** Carved name has subtly changed     |
+| 15   | **CLEAN** | —                                                     |
+| 16   | Anomaly   | **[LIGHT]** Player's shadow points the wrong way      |
+| 17   | Anomaly   | **[OBJECTS]** Candle burning upside down              |
+| 18   | **CLEAN** | —                                                     |
+| 19   | Anomaly   | **[AUDIO]** Footsteps behind the player               |
+| 20   | Anomaly   | **[PRESENCE]** Silhouette at corridor end, disappears |
 
-*End of Act 2:* The distance panel reaches 20m — then resets to 80m with no mistake made. Something external has intervened.
+_End of Act 2:_ The distance panel reaches 20m — then resets to 80m with no mistake made. Something external has intervened.
 
 ---
 
@@ -362,24 +374,24 @@ Anomalies become subtle. Audio anomalies are introduced. The first silhouette ap
 
 The longest and most demanding act. Anomalies become ambiguous. The Immutable Rules begin to break. The graffiti on the walls accumulates — evidence of others who were here, who didn't get out. The line between normal and wrong becomes genuinely unclear.
 
-| Pass | State | Anomaly |
-|---|---|---|
-| 21 | **CLEAN** | New graffiti visible on walls (environmental, not an anomaly) |
-| 22 | Anomaly | **[INSCRIPTIONS]** "TURN BACK" appears on wall |
-| 23 | Anomaly | **[ARCHITECTURE]** Corridor seems longer |
-| 24 | **CLEAN** | — |
-| 25 | Anomaly | **[LIGHT]** Pool of light, no source |
-| 26 | Anomaly | **[OBJECTS]** Second backpack, identical to player's |
-| 27 | Anomaly | **[AUDIO]** Echo returns too late |
-| 28 | **CLEAN** | *Immutable Rule broken:* the candle is lit |
-| 29 | Anomaly | **[ARCHITECTURE]** Corridor is its own mirror image |
-| 30 | Anomaly | **[INSCRIPTIONS]** Distance panel shows negative number |
-| 31 | Anomaly | **[AUDIO]** Distant voice says something recognizable |
-| 32 | **CLEAN** | — |
-| 33 | Anomaly | **[LIGHT]** Torch illuminates behind the player |
-| 34 | Anomaly | **[PRESENCE]** Silhouette mirrors player's movements |
+| Pass | State     | Anomaly                                                       |
+| ---- | --------- | ------------------------------------------------------------- |
+| 21   | **CLEAN** | New graffiti visible on walls (environmental, not an anomaly) |
+| 22   | Anomaly   | **[INSCRIPTIONS]** "TURN BACK" appears on wall                |
+| 23   | Anomaly   | **[ARCHITECTURE]** Corridor seems longer                      |
+| 24   | **CLEAN** | —                                                             |
+| 25   | Anomaly   | **[LIGHT]** Pool of light, no source                          |
+| 26   | Anomaly   | **[OBJECTS]** Second backpack, identical to player's          |
+| 27   | Anomaly   | **[AUDIO]** Echo returns too late                             |
+| 28   | **CLEAN** | _Immutable Rule broken:_ the candle is lit                    |
+| 29   | Anomaly   | **[ARCHITECTURE]** Corridor is its own mirror image           |
+| 30   | Anomaly   | **[INSCRIPTIONS]** Distance panel shows negative number       |
+| 31   | Anomaly   | **[AUDIO]** Distant voice says something recognizable         |
+| 32   | **CLEAN** | —                                                             |
+| 33   | Anomaly   | **[LIGHT]** Torch illuminates behind the player               |
+| 34   | Anomaly   | **[PRESENCE]** Silhouette mirrors player's movements          |
 
-*End of Act 3:* Distance panel reads "EXIT — 0m." A door appears where there was no door.
+_End of Act 3:_ Distance panel reads "EXIT — 0m." A door appears where there was no door.
 
 ---
 
@@ -387,14 +399,14 @@ The longest and most demanding act. Anomalies become ambiguous. The Immutable Ru
 
 Short. Almost silent. The corridor looks exactly like Act 1 — clean, relatively bright, familiar. But the player has seen too much to trust that. The graffiti from all previous passes lines the walls. The accumulated record of everyone who was here before.
 
-| Pass | State | Anomaly |
-|---|---|---|
-| 35 | **CLEAN** | Corridor identical to Pass 1. Uncannily so. |
-| 36 | Anomaly | **[INSCRIPTIONS]** Graffiti describes what the player just did |
-| 37 | **CLEAN** | — |
-| 38 | Anomaly | **[PRESENCE]** Player's double, back turned, at corridor end |
+| Pass | State     | Anomaly                                                        |
+| ---- | --------- | -------------------------------------------------------------- |
+| 35   | **CLEAN** | Corridor identical to Pass 1. Uncannily so.                    |
+| 36   | Anomaly   | **[INSCRIPTIONS]** Graffiti describes what the player just did |
+| 37   | **CLEAN** | —                                                              |
+| 38   | Anomaly   | **[PRESENCE]** Player's double, back turned, at corridor end   |
 
-*The Final Decision:* The player reaches their double. They can walk forward (through it) or turn back. Neither choice is explained. The game ends either way.
+_The Final Decision:_ The player reaches their double. They can walk forward (through it) or turn back. Neither choice is explained. The game ends either way.
 
 ---
 
@@ -412,7 +424,7 @@ The narrative emerges entirely from environmental accumulation:
 
 **The double.** The final image of the game is a figure that looks exactly like the player, standing at the end of the corridor, back turned. The player has to decide whether that is the anomaly, or whether they are.
 
-The game asks one question and doesn't answer it: *how long have you actually been down here?*
+The game asks one question and doesn't answer it: _how long have you actually been down here?_
 
 ---
 
@@ -465,5 +477,5 @@ The discipline of this list is as important as everything above it. The game is 
 
 ---
 
-*GDD v0.1 — Subject to revision as production begins.*  
-*All section names, working title, and anomaly specifics are provisional.*
+_GDD v0.2 — Updated: directional travel system (forward/backward replaces fixed left/right), return walk learning mechanic documented._
+_All section names, working title, and anomaly specifics are provisional._
