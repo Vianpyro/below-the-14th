@@ -8,9 +8,23 @@ impl Plugin for GamePlugin {
             .add_computed_state::<InGame>()
             .add_sub_state::<PauseState>()
             .insert_resource(RunState::default())
-            .add_systems(OnEnter(GameState::InLobby), on_enter_lobby);
+            .insert_resource(CorridorInfo::default());
     }
 }
+
+pub const LOBBY_HALF_WIDTH: f32 = 600.0;
+
+pub const CORRIDOR_LENGTH: f32 = 4000.0;
+
+pub const GROUND_Y: f32 = -250.0;
+
+pub const PLAYER_HEIGHT: f32 = 120.0;
+
+pub const PLAYER_WIDTH: f32 = 40.0;
+
+pub const WALK_SPEED: f32 = 300.0;
+
+pub const RUN_SPEED: f32 = 600.0;
 
 #[derive(States, Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
 pub enum GameState {
@@ -88,9 +102,18 @@ impl RunState {
     }
 }
 
-fn on_enter_lobby(run_state: Res<RunState>) {
-    info!(
-        "Entered lobby — distance: {}m, streak: {}/{}",
-        run_state.distance_remaining, run_state.consecutive_correct, run_state.streak_to_win
-    );
+#[derive(Resource, Debug)]
+pub struct CorridorInfo {
+    pub has_anomaly: bool,
+
+    pub direction: f32,
+}
+
+impl Default for CorridorInfo {
+    fn default() -> Self {
+        Self {
+            has_anomaly: false,
+            direction: 1.0,
+        }
+    }
 }

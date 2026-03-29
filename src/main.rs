@@ -23,7 +23,14 @@ fn main() {
             ..default()
         }))
         .insert_resource(ClearColor(Color::srgb(0.1, 0.09, 0.08)))
-        .add_plugins((game::GamePlugin, input::InputPlugin))
+        .add_plugins((
+            game::GamePlugin,
+            input::InputPlugin,
+            menu::MenuPlugin,
+            player::PlayerPlugin,
+            corridor::CorridorPlugin,
+            lobby::LobbyPlugin,
+        ))
         .add_systems(Startup, setup)
         .run();
 }
