@@ -4,3 +4,16 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+bevy = { version = "0.18.1", features = ["dynamic_linking"] }
+rand = "0.10.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# dynamic_linking is a dev-only feature that makes recompile times much faster.
+# Remove it (or gate it behind a feature flag) for release builds.
+
+[profile.dev]
+opt-level = 1 # A little optimisation makes Bevy dev builds much snappier
+
+[profile.dev.package."*"]
+opt-level = 3 # Full optimisation for dependencies (bevy, wgpu, etc.)
