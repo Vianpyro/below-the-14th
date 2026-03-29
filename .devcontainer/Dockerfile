@@ -1,15 +1,55 @@
-FROM alpine:latest
+FROM debian:bookworm-slim
 
-# Install common tools
-RUN apk add --no-cache bash git
+# Avoid interactive prompts during build
+ENV DEBIAN_FRONTEND=noninteractive
 
-# Setup default user
-ARG USERNAME=vscode
-ARG USER_UID=1000
-ARG USER_GID=$USER_UID
+# ── System dependencies ─────────────────────────────────────────────────────
+# Bevy requires these for compilation (even if not rendering in container):
+#   - libasound2-dev, libudev-dev: audio and input backends
+#   - libwayland-dev, libxkbcommon-dev: Wayland support
+#   - libvulkan-dev: GPU/rendering headers (link-time only)
+#   - pkg-config: finds system libraries for cargo build scripts
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    # Build essentials
+    build-essential \
+    pkg-config \
+    curl \
+    ca-certificates \
+    git \
+    # Bevy compile-time dependencies
+    libasound2-dev \
+    libudev-dev \
+    libwayland-dev \
+    libxkbcommon-dev \
+    libvulkan-dev \
+    # Useful extras
+    ripgrep \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN addgroup -g $USER_GID -S $USERNAME && \
-    adduser -u $USER_UID -S -G $USERNAME -s /bin/bash $USERNAME
+# Non-root user
+RUN useradd -ms /bin/bash dev
+USER dev
+WORKDIR /home/dev
 
-# Switch to the default user
-USER $USERNAME
+# Rust toolchain
+ENV RUSTUP_HOME=/home/dev/.rustup \
+    CARGO_HOME=/usr/local/cargo \
+    PATH="/usr/local/cargo/bin:${PATH}"
+
+# Install as root so cargo binaries go to shared path, then switch back
+USER root
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | \
+    sh -s -- -y --default-toolchain stable --profile default \
+    && rustup component add \
+    clippy \
+    rustfmt \
+    rust-analyzer \
+    && chmod -R a+rw /usr/local/cargo
+
+# Typst (for wiki)
+RUN curl -fsSL "https://github.com/typst/typst/releases/latest/download/typst-x86_64-unknown-linux-musl.tar.xz" \
+    | tar -xJ --strip-components=1 -C /usr/local/bin/ \
+    && chmod +x /usr/local/bin/typst
+
+USER dev
+WORKDIR /workspace

@@ -1,13 +1,62 @@
 {
-    "name": "Template Development Container",
-    "dockerFile": "Dockerfile",
+    "name": "Below the 14th",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": "."
+    },
+    // Mount the workspace with consistent permissions
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+    "workspaceFolder": "/workspace",
+    // Use a named volume for Cargo cache — survives container rebuilds,
+    // avoids re-downloading crates every time
+    "mounts": [
+        "source=bt14-cargo-registry,target=/usr/local/cargo/registry,type=volume",
+        "source=bt14-cargo-git,target=/usr/local/cargo/git,type=volume",
+        "source=bt14-target,target=/workspace/target,type=volume"
+    ],
     "customizations": {
-        "settings": {
-            "terminal.integrated.shell.linux": "/bin/bash"
-        },
         "vscode": {
-            "extensions": ["esbenp.prettier-vscode"]
+            "settings": {
+                // Rust Analyzer
+                "rust-analyzer.cargo.buildScripts.enable": true,
+                "rust-analyzer.check.command": "clippy",
+                "rust-analyzer.check.extraArgs": [
+                    "--",
+                    "-W",
+                    "clippy::pedantic"
+                ],
+                // Formatting
+                "editor.formatOnSave": true,
+                "[rust]": {
+                    "editor.defaultFormatter": "rust-lang.rust-analyzer"
+                },
+                "[typst]": {
+                    "editor.defaultFormatter": "myriad-dreamin.tinymist"
+                },
+                // File associations
+                "files.associations": {
+                    "*.wgsl": "wgsl"
+                },
+                // Terminal
+                "terminal.integrated.defaultProfile.linux": "bash"
+            },
+            "extensions": [
+                // Rust
+                "rust-lang.rust-analyzer",
+                // Bevy / shaders
+                "polyalloy.wgsl",
+                // Typst (wiki editing)
+                "myriad-dreamin.tinymist",
+                // General DX
+                "tamasfe.even-better-toml",
+                "fill-labs.dependi",
+                "EditorConfig.EditorConfig",
+                "eamodio.gitlens"
+            ]
         }
     },
-    "remoteUser": "vscode"
+    // Post-create: verify toolchain
+    "postCreateCommand": "rustc --version && cargo --version && typst --version && echo 'Devcontainer ready'",
+    // Run as non-root for safety
+    "remoteUser": "dev"
 }
