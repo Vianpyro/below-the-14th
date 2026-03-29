@@ -77,18 +77,6 @@ fn spawn_world(mut commands: Commands, existing: Query<(), With<WorldGround>>) {
         Transform::from_xyz(0.0, GROUND_Y + 500.0, 0.0),
     ));
 
-    for x in [CORRIDOR_LEFT_EDGE, CORRIDOR_RIGHT_EDGE] {
-        commands.spawn((
-            WorldGround,
-            Sprite {
-                color: Color::srgb(0.3, 0.25, 0.2),
-                custom_size: Some(Vec2::new(4.0, 450.0)),
-                ..default()
-            },
-            Transform::from_xyz(x, GROUND_Y + 175.0, 1.5),
-        ));
-    }
-
     info!("World spawned (left lobby: {LEFT_LOBBY_X}, right lobby: {RIGHT_LOBBY_X})");
 }
 
