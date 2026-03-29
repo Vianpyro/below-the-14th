@@ -24,7 +24,7 @@ fn spawn_ui(mut commands: Commands, existing: Query<(), With<DistancePanel>>) {
 
     commands.spawn((
         DistancePanel,
-        Text::new("EXIT — 80m"),
+        Text::new("EXIT - 80m"),
         TextFont {
             font_size: 36.0,
             ..default()
@@ -63,7 +63,7 @@ fn update_distance_panel(
     mut streak_query: Query<&mut Text, (With<StreakDisplay>, Without<DistancePanel>)>,
 ) {
     if let Ok(mut text) = distance_query.single_mut() {
-        *text = Text::new(format!("EXIT — {}m", run_state.distance_remaining));
+        *text = Text::new(format!("EXIT - {}m", run_state.distance_remaining));
     }
     if let Ok(mut text) = streak_query.single_mut() {
         *text = Text::new(format!(

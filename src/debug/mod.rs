@@ -48,7 +48,7 @@ fn manage_debug_overlay(
     let player_x = player_query
         .single()
         .map(|t| format!("{:+.0}", t.translation.x))
-        .unwrap_or_else(|_| "–".to_string());
+        .unwrap_or_else(|_| "--".to_string());
 
     let pause_str = pause_state
         .as_ref()
@@ -62,13 +62,13 @@ fn manage_debug_overlay(
                 format!("{:?}", ci.current_lobby),
                 format!("{:?}", ci.origin_lobby),
                 if ci.has_anomaly {
-                    "YES ⚠".to_string()
+                    "YES".to_string()
                 } else {
                     "no".to_string()
                 },
             )
         })
-        .unwrap_or_else(|| ("–".into(), "–".into(), "–".into()));
+        .unwrap_or_else(|| ("--".into(), "--".into(), "--".into()));
 
     let (dist_str, streak_str, passes_str) = run_state
         .as_ref()
@@ -79,7 +79,7 @@ fn manage_debug_overlay(
                 format!("{}", rs.passes_completed),
             )
         })
-        .unwrap_or_else(|| ("–".into(), "–".into(), "–".into()));
+        .unwrap_or_else(|| ("--".into(), "--".into(), "--".into()));
 
     let content = format!(
         "[ F3 ] DEBUG\n\

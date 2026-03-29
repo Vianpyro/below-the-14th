@@ -129,7 +129,7 @@ fn generate_corridor(
     ));
 
     info!(
-        "Corridor generated — origin: {:?}, far end: x={far_x:.0}, anomaly: {has_anomaly}",
+        "Corridor generated -- origin: {:?}, far end: x={far_x:.0}, anomaly: {has_anomaly}",
         corridor_info.origin_lobby
     );
 }
@@ -185,18 +185,18 @@ fn check_corridor_thresholds(
         let won = evaluate_decision("keep_walking", corridor_info.has_anomaly, &mut run_state);
         corridor_info.current_lobby = origin.opposite();
         info!(
-            "Reached far end → now in {:?} lobby",
+            "Reached far end -> now in {:?} lobby",
             corridor_info.current_lobby
         );
         if won {
-            info!("Player reached the exit — game complete!");
+            info!("Player reached the exit -- game complete!");
         }
         next_state.set(GameState::InLobby);
     } else if returned_to_origin {
         evaluate_decision("turn_back", corridor_info.has_anomaly, &mut run_state);
         corridor_info.current_lobby = origin;
         info!(
-            "Turned back → still in {:?} lobby",
+            "Turned back -> still in {:?} lobby",
             corridor_info.current_lobby
         );
         next_state.set(GameState::InLobby);
@@ -212,14 +212,14 @@ fn evaluate_decision(action: &str, has_anomaly: bool, run_state: &mut RunState) 
     if correct {
         let won = run_state.record_correct();
         info!(
-            "✓ Correct — {}m remaining, streak {}/{}",
+            "Correct -- {}m remaining, streak {}/{}",
             run_state.distance_remaining, run_state.consecutive_correct, run_state.streak_to_win
         );
         won
     } else {
         run_state.record_incorrect();
         info!(
-            "✗ Incorrect — reset to {}m (anomaly was: {has_anomaly})",
+            "Incorrect -- reset to {}m (anomaly was: {has_anomaly})",
             run_state.distance_remaining
         );
         false

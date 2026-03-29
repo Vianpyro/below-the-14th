@@ -75,10 +75,10 @@ fn wrap_player(mut query: Query<&mut Transform, With<Player>>) {
 
     if tf.translation.x > WORLD_RIGHT_EDGE {
         tf.translation.x -= WORLD_WIDTH - LOBBY_HALF_WIDTH * 2.0;
-        info!("Wrapped: right → left outer edge");
+        info!("Wrapped: right -> left outer edge");
     } else if tf.translation.x < WORLD_LEFT_EDGE {
         tf.translation.x += WORLD_WIDTH - LOBBY_HALF_WIDTH * 2.0;
-        info!("Wrapped: left → right outer edge");
+        info!("Wrapped: left -> right outer edge");
     }
 }
 
