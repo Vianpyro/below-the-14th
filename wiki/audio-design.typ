@@ -31,7 +31,9 @@ Inspired by myNoise — layered, continuous, generated from parameters rather th
   [Layer], [Character], [Spatial Position],
   [Water drips], [Irregular, persistent], [Far end of corridor],
   [Fluorescent hum], [Low, constant], [Zone C only],
-  [Air current], [One cold breath per traversal, random timing], [Moves through corridor],
+  [Air current],
+  [One cold breath per traversal, random timing],
+  [Moves through corridor],
 )
 
 == Event Sounds
@@ -48,7 +50,9 @@ Inspired by myNoise — layered, continuous, generated from parameters rather th
 #table(
   columns: (1fr, 2.5fr),
   [Sound], [Character],
-  [Footsteps], [Wet stone echo, slightly delayed. Changes with surface texture.],
+  [Footsteps],
+  [Wet stone echo, slightly delayed. Changes with surface texture.],
+
   [Stop/start], [Brief silence, then echo tail fades.],
 )
 
@@ -166,12 +170,29 @@ An audio anomaly must be detectable by a player who has internalized the canonic
 #table(
   columns: (3fr, 0.8fr, 0.8fr),
   [Anomaly], [Difficulty], [Channel],
-  [Complete silence where dripping water should be], [#tag("tier 1", color: rgb("#60a060"))], [#tag("audio")],
-  [Footsteps behind the player that stop when they stop], [#tag("tier 2", color: rgb("#d4a048"))], [#tag("audio")],
-  [Echo returns slightly too late], [#tag("tier 2", color: rgb("#d4a048"))], [#tag("audio")],
-  [Indistinct distant voice where there was none], [#tag("tier 2", color: rgb("#d4a048"))], [#tag("audio")],
-  [The distant voice says something recognizable], [#tag("tier 3", color: rgb("#c04040"))], [#tag("audio")],
-  [No sound at all — even footsteps are silent], [#tag("tier 3", color: rgb("#c04040"))], [#tag("audio")],
+  [Complete silence where dripping water should be],
+  [#tag("tier 1", color: rgb("#60a060"))],
+  [#tag("audio")],
+
+  [Footsteps behind the player that stop when they stop],
+  [#tag("tier 2", color: rgb("#d4a048"))],
+  [#tag("audio")],
+
+  [Echo returns slightly too late],
+  [#tag("tier 2", color: rgb("#d4a048"))],
+  [#tag("audio")],
+
+  [Indistinct distant voice where there was none],
+  [#tag("tier 2", color: rgb("#d4a048"))],
+  [#tag("audio")],
+
+  [The distant voice says something recognizable],
+  [#tag("tier 3", color: rgb("#c04040"))],
+  [#tag("audio")],
+
+  [No sound at all — even footsteps are silent],
+  [#tag("tier 3", color: rgb("#c04040"))],
+  [#tag("audio")],
 )
 
 == Pool Balance for Blind Mode

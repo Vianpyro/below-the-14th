@@ -98,7 +98,10 @@ The corridor has one fixed layout. Every anomaly is a deviation from this canoni
   columns: (1fr, 2fr, 1.5fr),
   [Layer], [Content], [Torch Illumination],
   [Background], [Rough limestone, cracks, moisture stains], [Barely reached],
-  [Midground], [Ossuaire walls, brick sections — primary anomaly zone], [Primary illumination],
+  [Midground],
+  [Ossuaire walls, brick sections — primary anomaly zone],
+  [Primary illumination],
+
   [Foreground], [Stone frame edges, partial ceiling], [Always partially lit],
 )
 
@@ -179,11 +182,18 @@ Graffiti is part of the canonical state — always present, always in the same p
   [Anomaly], [Difficulty],
   [Skull missing from its alcove], [#tag("tier 1", color: rgb("#60a060"))],
   [Candle lit instead of unlit], [#tag("tier 1", color: rgb("#60a060"))],
-  [Backpack moved from canonical position], [#tag("tier 2", color: rgb("#d4a048"))],
-  [Only 6 skulls in the row instead of 7], [#tag("tier 2", color: rgb("#d4a048"))],
+  [Backpack moved from canonical position],
+  [#tag("tier 2", color: rgb("#d4a048"))],
+
+  [Only 6 skulls in the row instead of 7],
+  [#tag("tier 2", color: rgb("#d4a048"))],
+
   [Candle flame burning upside down], [#tag("tier 2", color: rgb("#d4a048"))],
-  [An object appears that wasn't there on the last pass], [#tag("tier 3", color: rgb("#c04040"))],
-  [A second backpack, identical to the player's own], [#tag("tier 3", color: rgb("#c04040"))],
+  [An object appears that wasn't there on the last pass],
+  [#tag("tier 3", color: rgb("#c04040"))],
+
+  [A second backpack, identical to the player's own],
+  [#tag("tier 3", color: rgb("#c04040"))],
 )
 
 === Category 2 — Architecture #tag("visual")
@@ -193,11 +203,20 @@ Graffiti is part of the canonical state — always present, always in the same p
   [Anomaly], [Difficulty],
   [Bricked-up doorway now open], [#tag("tier 1", color: rgb("#60a060"))],
   [Collapsed arch now intact], [#tag("tier 1", color: rgb("#60a060"))],
-  [Corridor appears longer than it should be], [#tag("tier 2", color: rgb("#d4a048"))],
-  [Wall crack from last pass has disappeared], [#tag("tier 2", color: rgb("#d4a048"))],
-  [Wrong wall texture in a section (stone becomes brick)], [#tag("tier 2", color: rgb("#d4a048"))],
-  [Entire corridor is a mirror image of itself], [#tag("tier 3", color: rgb("#c04040"))],
-  [A chamber exists that cannot be here], [#tag("tier 3", color: rgb("#c04040"))],
+  [Corridor appears longer than it should be],
+  [#tag("tier 2", color: rgb("#d4a048"))],
+
+  [Wall crack from last pass has disappeared],
+  [#tag("tier 2", color: rgb("#d4a048"))],
+
+  [Wrong wall texture in a section (stone becomes brick)],
+  [#tag("tier 2", color: rgb("#d4a048"))],
+
+  [Entire corridor is a mirror image of itself],
+  [#tag("tier 3", color: rgb("#c04040"))],
+
+  [A chamber exists that cannot be here],
+  [#tag("tier 3", color: rgb("#c04040"))],
 )
 
 === Category 3 — Light & Shadow #tag("visual")
@@ -206,11 +225,20 @@ Graffiti is part of the canonical state — always present, always in the same p
   columns: (3fr, 0.8fr),
   [Anomaly], [Difficulty],
   [Shadow cast with no light source], [#tag("tier 1", color: rgb("#60a060"))],
-  [Work lamp on when it was broken and dark before], [#tag("tier 1", color: rgb("#60a060"))],
-  [Player's shadow points the wrong direction], [#tag("tier 2", color: rgb("#d4a048"))],
-  [Pool of light with no visible source], [#tag("tier 2", color: rgb("#d4a048"))],
-  [Shadow of an object that isn't there], [#tag("tier 3", color: rgb("#c04040"))],
-  [The torch illuminates behind the player, not ahead], [#tag("tier 3", color: rgb("#c04040"))],
+  [Work lamp on when it was broken and dark before],
+  [#tag("tier 1", color: rgb("#60a060"))],
+
+  [Player's shadow points the wrong direction],
+  [#tag("tier 2", color: rgb("#d4a048"))],
+
+  [Pool of light with no visible source],
+  [#tag("tier 2", color: rgb("#d4a048"))],
+
+  [Shadow of an object that isn't there],
+  [#tag("tier 3", color: rgb("#c04040"))],
+
+  [The torch illuminates behind the player, not ahead],
+  [#tag("tier 3", color: rgb("#c04040"))],
 )
 
 === Category 4 — Inscriptions & Graffiti #tag("visual")
@@ -220,11 +248,18 @@ Graffiti is part of the canonical state — always present, always in the same p
   [Anomaly], [Difficulty],
   [Carved date has changed], [#tag("tier 1", color: rgb("#60a060"))],
   [Directional arrow is reversed], [#tag("tier 1", color: rgb("#60a060"))],
-  [A carved name has subtly changed between passes], [#tag("tier 2", color: rgb("#d4a048"))],
-  [French graffiti replaced by unknown language], [#tag("tier 2", color: rgb("#d4a048"))],
+  [A carved name has subtly changed between passes],
+  [#tag("tier 2", color: rgb("#d4a048"))],
+
+  [French graffiti replaced by unknown language],
+  [#tag("tier 2", color: rgb("#d4a048"))],
+
   [New message reads "TURN BACK"], [#tag("tier 3", color: rgb("#c04040"))],
-  [Graffiti describes exactly what the player just did], [#tag("tier 3", color: rgb("#c04040"))],
-  [Distance panel displays a negative number], [#tag("tier 3", color: rgb("#c04040"))],
+  [Graffiti describes exactly what the player just did],
+  [#tag("tier 3", color: rgb("#c04040"))],
+
+  [Distance panel displays a negative number],
+  [#tag("tier 3", color: rgb("#c04040"))],
 )
 
 === Category 5 — Audio Only #tag("audio")
@@ -232,12 +267,21 @@ Graffiti is part of the canonical state — always present, always in the same p
 #table(
   columns: (3fr, 0.8fr),
   [Anomaly], [Difficulty],
-  [Complete silence where dripping water should be], [#tag("tier 1", color: rgb("#60a060"))],
-  [Footsteps behind the player that stop when they stop], [#tag("tier 2", color: rgb("#d4a048"))],
+  [Complete silence where dripping water should be],
+  [#tag("tier 1", color: rgb("#60a060"))],
+
+  [Footsteps behind the player that stop when they stop],
+  [#tag("tier 2", color: rgb("#d4a048"))],
+
   [Echo returns slightly too late], [#tag("tier 2", color: rgb("#d4a048"))],
-  [Indistinct distant voice where there was none], [#tag("tier 2", color: rgb("#d4a048"))],
-  [The distant voice says something recognizable], [#tag("tier 3", color: rgb("#c04040"))],
-  [No sound at all — even footsteps are silent], [#tag("tier 3", color: rgb("#c04040"))],
+  [Indistinct distant voice where there was none],
+  [#tag("tier 2", color: rgb("#d4a048"))],
+
+  [The distant voice says something recognizable],
+  [#tag("tier 3", color: rgb("#c04040"))],
+
+  [No sound at all — even footsteps are silent],
+  [#tag("tier 3", color: rgb("#c04040"))],
 )
 
 === Category 6 — Presence / Silhouette #tag("visual")
@@ -249,11 +293,20 @@ Graffiti is part of the canonical state — always present, always in the same p
 #table(
   columns: (3fr, 0.8fr),
   [Anomaly], [Difficulty],
-  [Silhouette at the far end that disappears when approached], [#tag("tier 2", color: rgb("#d4a048"))],
-  [Silhouette that doesn't recede as the player advances], [#tag("tier 2", color: rgb("#d4a048"))],
-  [Silhouette that mirrors the player's movements exactly], [#tag("tier 3", color: rgb("#c04040"))],
-  [Silhouette present on the return pass but not the initial walk], [#tag("tier 3", color: rgb("#c04040"))],
-  [Silhouette identical to the player, back turned (the double)], [#tag("tier 3", color: rgb("#c04040"))],
+  [Silhouette at the far end that disappears when approached],
+  [#tag("tier 2", color: rgb("#d4a048"))],
+
+  [Silhouette that doesn't recede as the player advances],
+  [#tag("tier 2", color: rgb("#d4a048"))],
+
+  [Silhouette that mirrors the player's movements exactly],
+  [#tag("tier 3", color: rgb("#c04040"))],
+
+  [Silhouette present on the return pass but not the initial walk],
+  [#tag("tier 3", color: rgb("#c04040"))],
+
+  [Silhouette identical to the player, back turned (the double)],
+  [#tag("tier 3", color: rgb("#c04040"))],
 )
 
 
@@ -394,7 +447,10 @@ These values are design levers. They should be easy to change during playtesting
   [`walk_speed`], [TBD], [Base walking speed],
   [`run_speed`], [TBD], [Running speed],
   [`corridor_length`], [TBD], [Corridor length in world units],
-  [`difficulty_tier_thresholds`], [\[0, N, M\]], [Passes before tier 2/3 unlock],
+  [`difficulty_tier_thresholds`],
+  [\[0, N, M\]],
+  [Passes before tier 2/3 unlock],
+
   [`torch_radius`], [TBD], [Base radius of torch illumination],
   [`torch_falloff`], [TBD], [Softness of torch edge falloff],
 )

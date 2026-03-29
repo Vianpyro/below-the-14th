@@ -208,7 +208,9 @@ Parameters shift subtly as the player progresses:
   columns: (1fr, 2.5fr),
   [Phase], [Character],
   [Early passes], [Neutral, realistic catacomb ambiance],
-  [Mid passes], [Same sounds, mix shifts — frequencies slightly wrong, silences louder],
+  [Mid passes],
+  [Same sounds, mix shifts — frequencies slightly wrong, silences louder],
+
   [Late passes], [Soundscape unreliable — audio anomalies maximally effective],
   [Final corridor], [Near silence — dripping stopped, hum gone, excessive echo],
 )

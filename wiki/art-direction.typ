@@ -29,9 +29,17 @@ Three parallax layers create depth without 3D assets:
 #table(
   columns: (1fr, 2fr, 1.5fr),
   [Layer], [Content], [Visual Character],
-  [Background], [Rough limestone, cracks, moisture stains], [Deep, barely visible, geological],
-  [Midground], [Ossuaire walls, brick sections, objects], [Primary detail layer, where anomalies live],
-  [Foreground], [Stone frame edges, partial ceiling], [Framing, partially obscures view],
+  [Background],
+  [Rough limestone, cracks, moisture stains],
+  [Deep, barely visible, geological],
+
+  [Midground],
+  [Ossuaire walls, brick sections, objects],
+  [Primary detail layer, where anomalies live],
+
+  [Foreground],
+  [Stone frame edges, partial ceiling],
+  [Framing, partially obscures view],
 )
 
 == Procedural Textures
