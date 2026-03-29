@@ -1,7 +1,8 @@
 use bevy::prelude::*;
 
 use crate::game::{
-    GROUND_Y, GameState, PLAYER_HEIGHT, PLAYER_WIDTH, PauseState, RUN_SPEED, WALK_SPEED,
+    GROUND_Y, GameState, LEFT_LOBBY_X, LOBBY_HALF_WIDTH, PLAYER_HEIGHT, PLAYER_WIDTH, PauseState,
+    RUN_SPEED, WALK_SPEED, WORLD_LEFT_EDGE, WORLD_RIGHT_EDGE, WORLD_WIDTH,
 };
 
 pub struct PlayerPlugin;
@@ -11,7 +12,9 @@ impl Plugin for PlayerPlugin {
         app.add_systems(OnEnter(GameState::InLobby), spawn_player)
             .add_systems(
                 Update,
-                (move_player, camera_follow).run_if(in_state(PauseState::Playing)),
+                (move_player, wrap_player, camera_follow)
+                    .chain()
+                    .run_if(in_state(PauseState::Playing)),
             );
     }
 }
@@ -24,8 +27,6 @@ fn spawn_player(mut commands: Commands, existing: Query<(), With<Player>>) {
         return;
     }
 
-    let player_y = GROUND_Y + PLAYER_HEIGHT / 2.0;
-
     commands.spawn((
         Player,
         Sprite {
@@ -33,10 +34,10 @@ fn spawn_player(mut commands: Commands, existing: Query<(), With<Player>>) {
             custom_size: Some(Vec2::new(PLAYER_WIDTH, PLAYER_HEIGHT)),
             ..default()
         },
-        Transform::from_xyz(0.0, player_y, 10.0),
+        Transform::from_xyz(LEFT_LOBBY_X, GROUND_Y + PLAYER_HEIGHT / 2.0, 10.0),
     ));
 
-    info!("Player spawned");
+    info!("Player spawned at left lobby (x={LEFT_LOBBY_X})");
 }
 
 fn move_player(
@@ -64,6 +65,20 @@ fn move_player(
             WALK_SPEED
         };
         transform.translation.x += direction * speed * time.delta_secs();
+    }
+}
+
+fn wrap_player(mut query: Query<&mut Transform, With<Player>>) {
+    let Ok(mut tf) = query.single_mut() else {
+        return;
+    };
+
+    if tf.translation.x > WORLD_RIGHT_EDGE {
+        tf.translation.x -= WORLD_WIDTH - LOBBY_HALF_WIDTH * 2.0;
+        info!("Wrapped: right → left outer edge");
+    } else if tf.translation.x < WORLD_LEFT_EDGE {
+        tf.translation.x += WORLD_WIDTH - LOBBY_HALF_WIDTH * 2.0;
+        info!("Wrapped: left → right outer edge");
     }
 }
 

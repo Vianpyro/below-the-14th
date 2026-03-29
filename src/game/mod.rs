@@ -13,18 +13,63 @@ impl Plugin for GamePlugin {
 }
 
 pub const LOBBY_HALF_WIDTH: f32 = 600.0;
-
 pub const CORRIDOR_LENGTH: f32 = 4000.0;
+pub const CORRIDOR_LEFT_EDGE: f32 = -(CORRIDOR_LENGTH / 2.0);
+pub const CORRIDOR_RIGHT_EDGE: f32 = CORRIDOR_LENGTH / 2.0;
+pub const LEFT_LOBBY_X: f32 = CORRIDOR_LEFT_EDGE - LOBBY_HALF_WIDTH;
+pub const RIGHT_LOBBY_X: f32 = CORRIDOR_RIGHT_EDGE + LOBBY_HALF_WIDTH;
+
+pub const WORLD_LEFT_EDGE: f32 = LEFT_LOBBY_X - LOBBY_HALF_WIDTH;
+
+pub const WORLD_RIGHT_EDGE: f32 = RIGHT_LOBBY_X + LOBBY_HALF_WIDTH;
+
+pub const WORLD_WIDTH: f32 = WORLD_RIGHT_EDGE - WORLD_LEFT_EDGE;
 
 pub const GROUND_Y: f32 = -250.0;
-
 pub const PLAYER_HEIGHT: f32 = 120.0;
-
 pub const PLAYER_WIDTH: f32 = 40.0;
-
 pub const WALK_SPEED: f32 = 300.0;
-
 pub const RUN_SPEED: f32 = 600.0;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LobbyId {
+    Left,
+    Right,
+}
+
+impl LobbyId {
+    pub fn opposite(self) -> Self {
+        match self {
+            LobbyId::Left => LobbyId::Right,
+            LobbyId::Right => LobbyId::Left,
+        }
+    }
+
+    pub fn center_x(self) -> f32 {
+        match self {
+            LobbyId::Left => LEFT_LOBBY_X,
+            LobbyId::Right => RIGHT_LOBBY_X,
+        }
+    }
+
+    pub fn near_corridor_edge(self) -> f32 {
+        match self {
+            LobbyId::Left => CORRIDOR_LEFT_EDGE,
+            LobbyId::Right => CORRIDOR_RIGHT_EDGE,
+        }
+    }
+
+    pub fn far_corridor_edge(self) -> f32 {
+        self.opposite().near_corridor_edge()
+    }
+
+    pub fn forward_dir(self) -> f32 {
+        match self {
+            LobbyId::Left => 1.0,
+            LobbyId::Right => -1.0,
+        }
+    }
+}
 
 #[derive(States, Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
 pub enum GameState {
@@ -40,7 +85,6 @@ pub struct InGame;
 
 impl ComputedStates for InGame {
     type SourceStates = Option<GameState>;
-
     fn compute(sources: Option<GameState>) -> Option<Self> {
         match sources {
             Some(GameState::InLobby | GameState::InCorridor) => Some(InGame),
@@ -85,20 +129,15 @@ impl Default for RunState {
 impl RunState {
     pub fn record_correct(&mut self) -> bool {
         self.consecutive_correct += 1;
-        self.distance_remaining -= self.distance_per_correct;
         self.passes_completed += 1;
-
-        if self.distance_remaining <= 0.0 {
-            self.distance_remaining = 0.0;
-        }
-
+        self.distance_remaining = (self.distance_remaining - self.distance_per_correct).max(0.0);
         self.consecutive_correct >= self.streak_to_win
     }
 
     pub fn record_incorrect(&mut self) {
         self.consecutive_correct = 0;
-        self.distance_remaining = self.distance_max;
         self.passes_completed += 1;
+        self.distance_remaining = self.distance_max;
     }
 }
 
@@ -106,14 +145,17 @@ impl RunState {
 pub struct CorridorInfo {
     pub has_anomaly: bool,
 
-    pub direction: f32,
+    pub current_lobby: LobbyId,
+
+    pub origin_lobby: LobbyId,
 }
 
 impl Default for CorridorInfo {
     fn default() -> Self {
         Self {
             has_anomaly: false,
-            direction: 1.0,
+            current_lobby: LobbyId::Left,
+            origin_lobby: LobbyId::Left,
         }
     }
 }

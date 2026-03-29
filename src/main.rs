@@ -2,6 +2,7 @@ mod accessibility;
 mod anomaly;
 mod audio;
 mod corridor;
+mod debug;
 mod game;
 mod input;
 mod lighting;
@@ -30,6 +31,7 @@ fn main() {
             player::PlayerPlugin,
             corridor::CorridorPlugin,
             lobby::LobbyPlugin,
+            debug::DebugPlugin,
         ))
         .add_systems(Startup, setup)
         .run();
