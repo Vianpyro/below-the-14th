@@ -56,7 +56,7 @@
         }
     },
     // Post-create: verify toolchain
-    "postCreateCommand": "rustc --version && cargo --version && typst --version && echo 'Devcontainer ready'",
+    "postCreateCommand": "sudo chown -R dev:dev /workspace/target /usr/local/cargo/registry /usr/local/cargo/git && rustc --version && cargo --version && typst --version && echo 'Devcontainer ready'",
     // Run as non-root for safety
     "remoteUser": "dev"
 }

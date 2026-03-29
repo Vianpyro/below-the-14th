@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     ca-certificates \
     git \
+    sudo \
     # Bevy compile-time dependencies
     libasound2-dev \
     libudev-dev \
@@ -27,24 +28,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Non-root user
-RUN useradd -ms /bin/bash dev
-USER dev
-WORKDIR /home/dev
+RUN useradd -ms /bin/bash -G sudo dev \
+    && echo "dev ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/dev
 
 # Rust toolchain
-ENV RUSTUP_HOME=/home/dev/.rustup \
+ENV RUSTUP_HOME=/usr/local/rustup \
     CARGO_HOME=/usr/local/cargo \
     PATH="/usr/local/cargo/bin:${PATH}"
 
-# Install as root so cargo binaries go to shared path, then switch back
-USER root
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | \
     sh -s -- -y --default-toolchain stable --profile default \
     && rustup component add \
     clippy \
     rustfmt \
     rust-analyzer \
-    && chmod -R a+rw /usr/local/cargo
+    rust-src \
+    && chmod -R a+rw /usr/local/rustup /usr/local/cargo
 
 # Typst (for wiki)
 RUN curl -fsSL "https://github.com/typst/typst/releases/latest/download/typst-x86_64-unknown-linux-musl.tar.xz" \
